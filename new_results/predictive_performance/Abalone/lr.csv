@@ -1,0 +1,31 @@
+,mae,rmse
+No Sampling_Fold_0,2.291,3.206
+RUS_Fold_0,4.13,5.146
+ROS_Fold_0,2.509,3.377
+Distributed SMOGN (k_partitions = 2)_Fold_0,2.79,3.91
+Distributed SMOGN (k_partitions = 4)_Fold_0,3.019,4.033
+Distributed SMOGN (k_partitions = 8)_Fold_0,2.341,3.352
+No Sampling_Fold_1,2.591,3.503
+RUS_Fold_1,2.502,3.494
+ROS_Fold_1,2.198,3.088
+Distributed SMOGN (k_partitions = 2)_Fold_1,2.3,3.273
+Distributed SMOGN (k_partitions = 4)_Fold_1,3.013,3.988
+Distributed SMOGN (k_partitions = 8)_Fold_1,2.767,3.796
+No Sampling_Fold_2,2.277,3.189
+RUS_Fold_2,4.871,5.942
+ROS_Fold_2,2.204,3.111
+Distributed SMOGN (k_partitions = 2)_Fold_2,2.62,3.599
+Distributed SMOGN (k_partitions = 4)_Fold_2,2.818,3.906
+Distributed SMOGN (k_partitions = 8)_Fold_2,2.287,3.272
+No Sampling_Fold_3,2.817,3.822
+RUS_Fold_3,4.073,5.081
+ROS_Fold_3,2.36,3.3
+Distributed SMOGN (k_partitions = 2)_Fold_3,3.154,4.203
+Distributed SMOGN (k_partitions = 4)_Fold_3,2.448,3.506
+Distributed SMOGN (k_partitions = 8)_Fold_3,2.708,3.799
+No Sampling_Fold_4,2.229,3.008
+RUS_Fold_4,2.237,3.028
+ROS_Fold_4,2.273,3.085
+Distributed SMOGN (k_partitions = 2)_Fold_4,2.297,3.179
+Distributed SMOGN (k_partitions = 4)_Fold_4,2.295,3.175
+Distributed SMOGN (k_partitions = 8)_Fold_4,2.294,3.161
