@@ -328,12 +328,12 @@ def run_folds(dataset_name, label_col, random_state, iteration):
         except Exception as e:
             print(f"Exception in ROS: {e}")
 
-        try:
-            smogn_data, smogn_time = run_smogn(label_col, train)
-            smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
-        except Exception as e:
-            print(f"Exception in SMOGN: {e}")
+        # try:
+        #     smogn_data, smogn_time = run_smogn(label_col, train)
+        #     smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
+        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
+        # except Exception as e:
+        #     print(f"Exception in SMOGN: {e}")
 
         try:
             dist_smogn_2_data, dist_smogn_2_time = run_smogn_with_n_partitions(2, label_col, train)
