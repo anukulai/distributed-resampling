@@ -52,10 +52,10 @@ EXPERIMENTS = {
         "name": "ROS",
         "file_postfix": "_ros"
     },
-    "smogn": {
-        "name": "SMOGN",
-        "file_postfix": "_smogn"
-    },
+    # "smogn": {
+    #     "name": "SMOGN",
+    #     "file_postfix": "_smogn"
+    # },
     "dist_smogn_2": {
         "name": "Distributed SMOGN (k_partitions = 2)",
         "file_postfix": "_distsmogn2"
