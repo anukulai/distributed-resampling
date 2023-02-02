@@ -3,7 +3,7 @@ import time
 
 import pandas as pd
 from pyspark.sql import SparkSession
-from sklearn.model_selection import StratifiedKFold, KFold
+from sklearn.model_selection import KFold
 from smogn import smoter
 
 from src.relevance.phi import Phi
@@ -314,47 +314,47 @@ def run_folds(dataset_name, label_col, random_state, iteration):
 
         # run sampling techniques #######################################
 
-        try:
-            dist_rus_data, dist_rus_time = run_dist_rus(label_col, train)
-            dist_rus_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_rus_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["RUS"] = dist_rus_time
-        except Exception as e:
-            print(f"Exception in RUS: {e}")
+        # try:
+        #     dist_rus_data, dist_rus_time = run_dist_rus(label_col, train)
+        #     dist_rus_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_rus_iter_{iteration}_fold_{fold}.csv", index=False)
+        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["RUS"] = dist_rus_time
+        # except Exception as e:
+        #     print(f"Exception in RUS: {e}")
+        #
+        # try:
+        #     dist_ros_data, dist_ros_time = run_dist_ros(label_col, train)
+        #     dist_ros_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_ros_iter_{iteration}_fold_{fold}.csv", index=False)
+        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ROS"] = dist_ros_time
+        # except Exception as e:
+        #     print(f"Exception in ROS: {e}")
 
         try:
-            dist_ros_data, dist_ros_time = run_dist_ros(label_col, train)
-            dist_ros_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_ros_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ROS"] = dist_ros_time
+            smogn_data, smogn_time = run_smogn(label_col, train)
+            smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
         except Exception as e:
-            print(f"Exception in ROS: {e}")
+            print(f"Exception in SMOGN: {e}")
 
         # try:
-        #     smogn_data, smogn_time = run_smogn(label_col, train)
-        #     smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
+        #     dist_smogn_2_data, dist_smogn_2_time = run_smogn_with_n_partitions(2, label_col, train)
+        #     dist_smogn_2_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn2_iter_{iteration}_fold_{fold}.csv", index=False)
+        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_2P"] = dist_smogn_2_time
         # except Exception as e:
-        #     print(f"Exception in SMOGN: {e}")
-
-        try:
-            dist_smogn_2_data, dist_smogn_2_time = run_smogn_with_n_partitions(2, label_col, train)
-            dist_smogn_2_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn2_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_2P"] = dist_smogn_2_time
-        except Exception as e:
-            print(f"Exception in DIST SMOGN2: {e}")
-
-        try:
-            dist_smogn_4_data, dist_smogn_4_time = run_smogn_with_n_partitions(4, label_col, train)
-            dist_smogn_4_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn4_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_4P"] = dist_smogn_4_time
-        except Exception as e:
-            print(f"Exception in DIST SMOGN4: {e}")
-
-        try:
-            dist_smogn_8_data, dist_smogn_8_time = run_smogn_with_n_partitions(8, label_col, train)
-            dist_smogn_8_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn8_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_8P"] = dist_smogn_8_time
-        except Exception as e:
-            print(f"Exception in DIST SMOGN8: {e}")
+        #     print(f"Exception in DIST SMOGN2: {e}")
+        #
+        # try:
+        #     dist_smogn_4_data, dist_smogn_4_time = run_smogn_with_n_partitions(4, label_col, train)
+        #     dist_smogn_4_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn4_iter_{iteration}_fold_{fold}.csv", index=False)
+        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_4P"] = dist_smogn_4_time
+        # except Exception as e:
+        #     print(f"Exception in DIST SMOGN4: {e}")
+        #
+        # try:
+        #     dist_smogn_8_data, dist_smogn_8_time = run_smogn_with_n_partitions(8, label_col, train)
+        #     dist_smogn_8_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn8_iter_{iteration}_fold_{fold}.csv", index=False)
+        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_8P"] = dist_smogn_8_time
+        # except Exception as e:
+        #     print(f"Exception in DIST SMOGN8: {e}")
 
 
 def run_iterations(dataset_name):
