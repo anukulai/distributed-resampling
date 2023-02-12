@@ -1,13 +1,21 @@
 import argparse
 
 import numpy as np
+import logging
 import pandas as pd
+import warnings
+warnings.filterwarnings(action="ignore")
+
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVR
+
+logging.basicConfig(level=20)
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(level=20)
 
 DATA_DIR = "new_data"   # change the data directory
 DATA_RAW_DIR = f"{DATA_DIR}/raw"
@@ -111,6 +119,14 @@ REGRESSORS = {
         ]
     }
 }
+
+columns_to_remove = {
+    "census": ["Unnamed: 0", "County", "State", "CensusTract"],
+    "onion_prices": ["Unnamed: 0", "commodity", "arrival_date"],
+    'CountyHousing': ["Unnamed: 0", "Real_Estate_Id", "Total_Sale_Date", "Month_Year_of_Sale", "Physical_Zip"],
+    'gpu_performance': ["Run1(ms)", "Run2(ms)", "Run3(ms)"],
+    'HousePrices': ["Unnamed: 0"]
+}
 #
 # for iteration in range(10):
 #
@@ -167,6 +183,7 @@ REGRESSORS = {
 #                 )
 
 def run_folds(dataset_name, label_col, iteration):
+    LOGGER.info(f"Running folds for {dataset_name} for {iteration} iteration!")
     for fold in range(NUM_FOLDS):
         DATA_PROCESSED_TRAIN_DIR = f"{DATA_PROCESSED_DIR}/{dataset_name}/train"
         DATA_PROCESSED_TEST_DIR = f"{DATA_PROCESSED_DIR}/{dataset_name}/test"
@@ -175,15 +192,22 @@ def run_folds(dataset_name, label_col, iteration):
             results = {}
 
             for experiment, experiment_config in EXPERIMENTS.items():
+                LOGGER.info(f"Iteration: {iteration} | Fold: {fold} | Regressor: {regressor} | Exp: {experiment}")
                 train = pd.read_csv(
                     f"{DATA_PROCESSED_TRAIN_DIR}/{dataset_name}{experiment_config['file_postfix']}_iter_{iteration}_fold_{fold}.csv"
                 )
+                train.drop(columns=columns_to_remove[dataset_name], inplace=True)
+
+                test = pd.read_csv(f"{DATA_PROCESSED_TEST_DIR}/{dataset_name}_iter_{iteration}_fold_{fold}.csv")
+                test.drop(columns=columns_to_remove[dataset_name], inplace=True)
+
                 y_train = train.pop(label_col)
                 x_train = pd.get_dummies(train)
 
-                test = pd.read_csv(f"{DATA_PROCESSED_TEST_DIR}/{dataset_name}_iter_{iteration}_fold_{fold}.csv")
                 y_test = test.pop(label_col)
                 x_test = pd.get_dummies(test)
+
+                x_train, x_test = x_train.align(x_test, join='inner', axis=1)
 
                 scaler = MinMaxScaler().fit(x_train)
 
@@ -215,7 +239,7 @@ def run_folds(dataset_name, label_col, iteration):
 
 def run_iterations(dataset_name):
 
-    print(f"Running {NUM_ITERATIONS} iterations for {dataset_name}")
+    LOGGER.info(f"Running {NUM_ITERATIONS} iterations for {dataset_name}")
 
     label_col = DATASETS.get(dataset_name)
 
