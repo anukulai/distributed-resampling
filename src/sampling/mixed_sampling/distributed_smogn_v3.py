@@ -151,6 +151,7 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
 
     def _create_synth_samples(self, partition, cat_feature_cols, num_feature_cols, label_col, n_synth_samples, k,
                               perturbation):
+        partition = partition.reset_index().drop(columns=["index"])
 
         LOGGER.info(f"Inside the create synth samples function")
         n_rows = len(partition.index)
