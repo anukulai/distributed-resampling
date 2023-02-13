@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 import pandas as pd
 import random
@@ -10,6 +11,10 @@ from sklearn.metrics import euclidean_distances
 from src.params.sampling._smogn import _KMeansParams, _SMOGNParams
 from src.sampling.mixed_sampling.base import BaseMixedSampler
 from src.utils.dataframe import get_num_cols, get_cat_cols
+
+logging.basicConfig(level=20)
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(level=20)
 
 
 def is_single_partition_present(df):
@@ -147,19 +152,26 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
     def _create_synth_samples(self, partition, cat_feature_cols, num_feature_cols, label_col, n_synth_samples, k,
                               perturbation):
 
+        LOGGER.info(f"Inside the create synth samples function")
         n_rows = len(partition.index)
 
         k = min(k, n_rows)
 
         # Calculate feature vectors
+        LOGGER.info(f"Calculating feature vectors")
         feature_vectors = partition[[*num_feature_cols]].to_numpy()
         n_dim = feature_vectors.shape[1]
 
         # Using HNSW to get k - nearest neighbors
         connections_num = 16
 
+        LOGGER.info("Creating the HNSW Flat Index")
         hnsw_index = faiss.IndexHNSWFlat(n_dim, connections_num)
+
+        LOGGER.info("Training the HNSW Index")
         hnsw_index.train(feature_vectors)
+
+        LOGGER.info("Adding vectors to the index")
         hnsw_index.add(feature_vectors)
         # Calculate euclidean distances between various combination of rows.
         # dist_matrix = euclidean_distances(feature_vectors, feature_vectors)
@@ -183,9 +195,14 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
         synth_samples = [None for _ in range(n_rows * n_synth_samples)]
 
         for base_sample_index, base_sample in partition.iterrows():
+            LOGGER.info(f"Processing the {base_sample_index}th data point")
             # Iterate through the partition and fetch distances and neighbour indices for a particular row.
+            LOGGER.info("Preparing Query Vector")
             query_vector = base_sample[[*num_feature_cols]].to_numpy().reshape((1, n_dim))
+
+            LOGGER.info("Searching the Index Now!")
             dists, neighbour_sample_indices = hnsw_index.search(query_vector, k)
+            LOGGER.info(f"Found the {k} nearest neighbours with distances: {dists}")
             # dists = dist_matrix[base_sample_index]
             # neighbour_sample_indices = neighbour_sample_index_matrix[base_sample_index]
 

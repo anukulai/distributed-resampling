@@ -1,5 +1,6 @@
 import argparse
 import time
+import warnings
 
 import pandas as pd
 from pyspark.sql import SparkSession
@@ -11,6 +12,7 @@ from src.sampling.mixed_sampling.distributed_smogn_v3 import DistributedSMOGN_v3
 from src.sampling.over_sampling.distributed_ros import DistributedROS
 from src.sampling.under_sampling.distributed_rus import DistributedRUS
 
+warnings.filterwarnings(action="ignore")
 
 DATA_DIR = "new_data"
 DATA_RAW_DIR = f"{DATA_DIR}/raw"
