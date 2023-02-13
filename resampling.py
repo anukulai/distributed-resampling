@@ -47,6 +47,7 @@ NUM_FOLDS = 5
 EXECUTION_TIME = {}
 
 SPARK = SparkSession.builder.master('local[4]').appName('Distributed Resampling').getOrCreate()
+SPARK.sparkContext.setLogLevel("ERROR")
 
 def run_dist_rus(label_col, train):
     try:
