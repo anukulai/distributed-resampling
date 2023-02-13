@@ -96,8 +96,8 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
 
             return pd.DataFrame(data=synth_samples)
 
-        # return bump.samples.groupby(partition_col).applyInPandas(create_synth_samples, schema=schema)
-        return bump.samples.toPandas().groupby(partition_col).apply(create_synth_samples)
+        return bump.samples.groupby(partition_col).applyInPandas(create_synth_samples, schema=schema)
+        # return bump.samples.toPandas().groupby(partition_col).apply(create_synth_samples)
 
     def _undersample(self, bump):
         return super()._partition(bump.samples).sample(withReplacement=False, fraction=bump.sampling_percentage)
@@ -202,6 +202,8 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
 
             LOGGER.info("Searching the Index Now!")
             dists, neighbour_sample_indices = hnsw_index.search(query_vector, k)
+            dists = dists[0] # unpack it to reshape
+            neighbour_sample_indices = neighbour_sample_indices[0] # unpack it to reshaope
             LOGGER.info(f"Found the {k} nearest neighbours with distances: {dists}")
             # dists = dist_matrix[base_sample_index]
             # neighbour_sample_indices = neighbour_sample_index_matrix[base_sample_index]
