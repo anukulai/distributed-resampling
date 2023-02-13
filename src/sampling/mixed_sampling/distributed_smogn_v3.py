@@ -205,7 +205,9 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
             dists, neighbour_sample_indices = hnsw_index.search(query_vector, k)
             dists = dists[0] # unpack it to reshape
             neighbour_sample_indices = neighbour_sample_indices[0] # unpack it to reshaope
-            LOGGER.info(f"Found the {k} nearest neighbours with distances: {dists}")
+            LOGGER.info(
+                f"Found the {k} nearest neighbours with distances: {dists} and indices: {neighbour_sample_indices}"
+            )
             # dists = dist_matrix[base_sample_index]
             # neighbour_sample_indices = neighbour_sample_index_matrix[base_sample_index]
 
