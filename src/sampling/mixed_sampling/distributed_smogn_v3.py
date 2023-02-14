@@ -153,7 +153,7 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
                               perturbation):
         partition = partition.reset_index(drop=True)
 
-        LOGGER.info(f"Inside the create synth samples function")
+        LOGGER.info(f"Inside the create synth samples function, Received a partition of length: {len(partition.index)}")
         n_rows = len(partition.index)
 
         k = min(k, n_rows)
@@ -203,8 +203,9 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
 
             LOGGER.info("Searching the Index Now!")
             dists, neighbour_sample_indices = hnsw_index.search(query_vector, k)
-            dists = dists[0] # unpack it to reshape
-            neighbour_sample_indices = neighbour_sample_indices[0] # unpack it to reshaope
+            # dists, neighbour_sample_indices = [[0, 0.02239875, 0.09518648, 0.0963985 , 0.13482575]], [[0, 3, 23, 1, 18]]
+            dists = dists[0]  # unpack it to reshape
+            neighbour_sample_indices = neighbour_sample_indices[0]  # unpack it to reshaope
             LOGGER.info(
                 f"Found the {k} nearest neighbours with distances: {dists} and indices: {neighbour_sample_indices}"
             )
@@ -214,11 +215,14 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
             for n_synth_sample in range(n_synth_samples):
 
                 # pick any random neighbour index
-                neighbour_sample_index = np.random.choice(neighbour_sample_indices)
+                random_num = random.randint(0, k-1)
+                neighbour_sample_index = neighbour_sample_indices[random_num]
                 neighbour_sample = partition.iloc[neighbour_sample_index]
 
-                dist = dists[neighbour_sample_index]
-                safe_dist = dists[neighbour_sample_indices[(k + 1) // 2]] / 2
+                dist = dists[random_num]
+                # safe_dist = dists[neighbour_sample_indices[(k + 1) // 2]] / 2
+                safe_dist = dists[(k + 1) // 2] / 2
+
 
                 if dist < safe_dist:
                     synth_sample = self._create_synth_sample_SMOTE(
