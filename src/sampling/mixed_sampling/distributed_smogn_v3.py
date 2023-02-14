@@ -196,19 +196,21 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
         synth_samples = [None for _ in range(n_rows * n_synth_samples)]
 
         for base_sample_index, base_sample in partition.iterrows():
-            LOGGER.info(f"Processing the {base_sample_index}th data point")
+            if base_sample_index % 500 == 0:
+                LOGGER.info(f"Processing the {base_sample_index}th data point")
             # Iterate through the partition and fetch distances and neighbour indices for a particular row.
-            LOGGER.info("Preparing Query Vector")
+            # LOGGER.info("Preparing Query Vector")
             query_vector = base_sample[[*num_feature_cols]].to_numpy().reshape((1, n_dim))
 
-            LOGGER.info("Searching the Index Now!")
+            # LOGGER.info("Searching the Index Now!")
             dists, neighbour_sample_indices = hnsw_index.search(query_vector, k)
             # dists, neighbour_sample_indices = [[0, 0.02239875, 0.09518648, 0.0963985 , 0.13482575]], [[0, 3, 23, 1, 18]]
             dists = dists[0]  # unpack it to reshape
             neighbour_sample_indices = neighbour_sample_indices[0]  # unpack it to reshaope
-            LOGGER.info(
-                f"Found the {k} nearest neighbours with distances: {dists} and indices: {neighbour_sample_indices}"
-            )
+            if base_sample_index % 500 == 0:
+                LOGGER.info(
+                    f"Found the {k} nearest neighbours with distances: {dists} and indices: {neighbour_sample_indices}"
+                )
             # dists = dist_matrix[base_sample_index]
             # neighbour_sample_indices = neighbour_sample_index_matrix[base_sample_index]
 
