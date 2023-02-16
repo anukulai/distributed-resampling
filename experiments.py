@@ -127,62 +127,8 @@ columns_to_remove = {
     'gpu_performance': ["Run1(ms)", "Run2(ms)", "Run3(ms)"],
     'HousePrices': ["Unnamed: 0"]
 }
-#
-# for iteration in range(10):
-#
-#     print(f"Performing calculation for ITERATION: {iteration}")
-#
-#     for fold in range(5):
-#
-#         print(f"Starting working on FOLD: {fold}")
-#
-#         for dataset, label_col in DATASETS.items():
-#             DATA_PROCESSED_TRAIN_DIR = f"{DATA_PROCESSED_DIR}/{dataset}/train"
-#             DATA_PROCESSED_TEST_DIR = f"{DATA_PROCESSED_DIR}/{dataset}/test"
-#
-#             for regressor, regressor_config in REGRESSORS.items():
-#                 results = {}
-#
-#                 for experiment, experiment_config in EXPERIMENTS.items():
-#                     train = pd.read_csv(
-#                         f"{DATA_PROCESSED_TRAIN_DIR}/{dataset}{experiment_config['file_postfix']}_Fold_{fold}.csv"
-#                     )
-#                     y_train = train.pop(label_col)
-#                     x_train = pd.get_dummies(train)
-#
-#                     test = pd.read_csv(f"{DATA_PROCESSED_TEST_DIR}/{dataset}_Fold_{fold}.csv")
-#                     y_test = test.pop(label_col)
-#                     x_test = pd.get_dummies(test)
-#
-#                     scaler = MinMaxScaler().fit(x_train)
-#
-#                     x_train = scaler.transform(x_train)
-#                     x_test = scaler.transform(x_test)
-#
-#                     y_phi = pd.read_csv(f"{DATA_PROCESSED_TEST_DIR}/{dataset}_phi_Fold_{fold}.csv")
-#
-#                     mae_list = []
-#                     rmse_list = []
-#
-#
-#                     results[experiment_config["name"]+"_Fold_"+str(fold)] = {}
-#
-#                     for model in regressor_config["variants"]:
-#                         model.fit(x_train, y_train)
-#
-#                         y_pred = model.predict(x_test)
-#
-#                         mae_list.append(mean_absolute_error(y_true=y_test, y_pred=y_pred, sample_weight=y_phi))
-#                         rmse_list.append(mean_squared_error(y_true=y_test, y_pred=y_pred, sample_weight=y_phi, squared=False))
-#
-#                     results[experiment_config["name"]+"_Fold_"+str(fold)]["mae"] = round(np.mean(mae_list), 3)
-#                     results[experiment_config["name"]+"_Fold_"+str(fold)]["rmse"] = round(np.mean(rmse_list), 3)
-#
-#                 pd.DataFrame(data=results).transpose().to_csv(
-#                     f"{RESULT_PREDICTIVE_PERFORMANCE_DIR}/{dataset}/{regressor}_iter_{iteration}.csv", index=True
-#                 )
 
-def run_folds(dataset_name, label_col, iteration):
+def run_folds(dataset_name, label_col, iteration, regressor_name):
     LOGGER.info(f"Running folds for {dataset_name} for {iteration} iteration!")
     for fold in range(NUM_FOLDS):
         DATA_PROCESSED_TRAIN_DIR = f"{DATA_PROCESSED_DIR}/{dataset_name}/train"
@@ -190,6 +136,8 @@ def run_folds(dataset_name, label_col, iteration):
 
         for regressor, regressor_config in REGRESSORS.items():
             results = {}
+            if regressor != regressor_name:
+                continue
 
             for experiment, experiment_config in EXPERIMENTS.items():
                 LOGGER.info(f"Iteration: {iteration} | Fold: {fold} | Regressor: {regressor} | Exp: {experiment}")
@@ -237,27 +185,29 @@ def run_folds(dataset_name, label_col, iteration):
                 f"{RESULT_PREDICTIVE_PERFORMANCE_DIR}/{dataset_name}/{regressor}_iter_{iteration}_fold_{fold}.csv", index=True
             )
 
-def run_iterations(dataset_name):
+def run_iterations(dataset_name, regressor_name):
 
     LOGGER.info(f"Running {NUM_ITERATIONS} iterations for {dataset_name}")
 
     label_col = DATASETS.get(dataset_name)
 
     for iteration in range(NUM_ITERATIONS):
-        run_folds(dataset_name, label_col, iteration)
+        run_folds(dataset_name, label_col, iteration, regressor_name)
 
 
 
-def orchestrate_resampling(dataset_name):
-    run_iterations(dataset_name)
+def orchestrate_resampling(dataset_name, regressor_name):
+    run_iterations(dataset_name, regressor_name)
     return
 
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--dataset", type=str, required=True)
+    arg_parser.add_argument("--regressor", type=str, required=True)
 
     arguments = arg_parser.parse_args()
     dataset_name = arguments.dataset
+    regressor_name = arguments.regressor
 
-    orchestrate_resampling(dataset_name)
+    orchestrate_resampling(dataset_name,regressor_name)
