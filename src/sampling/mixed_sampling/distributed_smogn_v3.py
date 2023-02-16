@@ -166,7 +166,7 @@ class DistributedSMOGN_v3(BaseMixedSampler, _KMeansParams, _SMOGNParams):
         # Using HNSW to get k - nearest neighbors
         connections_num = 16
         efConstruction = 16
-        efSearch = 40
+        efSearch = 76
 
         LOGGER.info("Creating the HNSW Flat Index")
         hnsw_index = faiss.IndexHNSWFlat(n_dim, connections_num)
