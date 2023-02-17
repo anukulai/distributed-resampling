@@ -21,7 +21,7 @@ DATA_DIR = "new_data"   # change the data directory
 DATA_RAW_DIR = f"{DATA_DIR}/raw"
 DATA_PROCESSED_DIR = f"{DATA_DIR}/processed"
 
-RESULT_DIR = "new_results"
+RESULT_DIR = "new_results_v2"
 RESULT_EXECUTION_TIME_DIR = f"{RESULT_DIR}"
 RESULT_PREDICTIVE_PERFORMANCE_DIR = f"{RESULT_DIR}/predictive_performance"
 
