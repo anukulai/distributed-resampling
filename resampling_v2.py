@@ -8,7 +8,7 @@ from sklearn.model_selection import KFold
 from smogn import smoter
 
 from src.relevance.phi import Phi
-from src.sampling.mixed_sampling.distributed_smogn_v3 import DistributedSMOGN_v3
+from src.sampling.mixed_sampling.distributed_smogn_v2 import DistributedSMOGN_v2
 from src.sampling.over_sampling.distributed_ros import DistributedROS
 from src.sampling.under_sampling.distributed_rus import DistributedRUS
 
@@ -97,7 +97,7 @@ def run_smogn_with_n_partitions(n, label_col, train):
     print(f"Running SMOGN with {n} partitions")
     try:
         start_time = time.time()
-        train_dist_smogn_n = DistributedSMOGN_v3(label_col=label_col, k_partitions=n).transform(train)
+        train_dist_smogn_n = DistributedSMOGN_v2(label_col=label_col, k_partitions=n).transform(train)
         end_time = time.time()
         time_taken = round(end_time - start_time, 3)
 
