@@ -8,7 +8,7 @@ from sklearn.model_selection import KFold
 from smogn import smoter
 
 from src.relevance.phi import Phi
-from src.sampling.mixed_sampling.distributed_smogn_v3 import DistributedSMOGN_v3
+from src.sampling.mixed_sampling.distributed_smogn import DistributedSMOGN
 from src.sampling.over_sampling.distributed_ros import DistributedROS
 from src.sampling.under_sampling.distributed_rus import DistributedRUS
 
@@ -41,7 +41,7 @@ DATASET_TO_LABEL_MAP = {
 }
 
 RANDOM_STATES = [42, 99, 65, 100, 1, 7, 23, 67, 11, 97]
-NUM_ITERATIONS = 2
+NUM_ITERATIONS = 10
 NUM_FOLDS = 5
 
 EXECUTION_TIME = {}
@@ -97,7 +97,7 @@ def run_smogn_with_n_partitions(n, label_col, train):
     print(f"Running SMOGN with {n} partitions")
     try:
         start_time = time.time()
-        train_dist_smogn_n = DistributedSMOGN_v3(label_col=label_col, k_partitions=n).transform(train)
+        train_dist_smogn_n = DistributedSMOGN(label_col=label_col, k_partitions=n).transform(train)
         end_time = time.time()
         time_taken = round(end_time - start_time, 3)
 
@@ -150,26 +150,26 @@ def run_folds(dataset_name, label_col, random_state, iteration):
 
         # run sampling techniques #######################################
 
-        # try:
-        #     dist_rus_data, dist_rus_time = run_dist_rus(label_col, train)
-        #     dist_rus_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_rus_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["RUS"] = dist_rus_time
-        # except Exception as e:
-        #     print(f"Exception in RUS: {e}")
-        #
-        # try:
-        #     dist_ros_data, dist_ros_time = run_dist_ros(label_col, train)
-        #     dist_ros_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_ros_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ROS"] = dist_ros_time
-        # except Exception as e:
-        #     print(f"Exception in ROS: {e}")
+        try:
+            dist_rus_data, dist_rus_time = run_dist_rus(label_col, train)
+            dist_rus_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_rus_iter_{iteration}_fold_{fold}.csv", index=False)
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["RUS"] = dist_rus_time
+        except Exception as e:
+            print(f"Exception in RUS: {e}")
 
-        # try:
-        #     smogn_data, smogn_time = run_smogn(label_col, train)
-        #     smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
-        # except Exception as e:
-        #     print(f"Exception in SMOGN: {e}")
+        try:
+            dist_ros_data, dist_ros_time = run_dist_ros(label_col, train)
+            dist_ros_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_ros_iter_{iteration}_fold_{fold}.csv", index=False)
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ROS"] = dist_ros_time
+        except Exception as e:
+            print(f"Exception in ROS: {e}")
+
+        try:
+            smogn_data, smogn_time = run_smogn(label_col, train)
+            smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
+        except Exception as e:
+            print(f"Exception in SMOGN: {e}")
 
         try:
             dist_smogn_2_data, dist_smogn_2_time = run_smogn_with_n_partitions(2, label_col, train)
