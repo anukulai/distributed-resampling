@@ -256,24 +256,43 @@ class DistributedSMOGN_v2(BaseMixedSampler, _KMeansParams, _SMOGNParams):
 
         return synth_samples
 
+    # def get_num_clusters(self, partition_size):
+    #     if partition_size <= 100:      #size: 0-100
+    #         return 1
+    #
+    #     elif 100 < partition_size <= 1000:    #size: 20-200
+    #         return 5
+    #
+    #     elif 1000 < partition_size <= 10000:      #size:100-1000
+    #         return 10
+    #
+    #     elif 10000 < partition_size <= 50000:      #size:500-2500
+    #         return 20
+    #
+    #     elif 50000 < partition_size <= 100000:    #size:1000-2000
+    #         return 50
+    #
+    #     else:
+    #         return 50
+
     def get_num_clusters(self, partition_size):
         if partition_size <= 100:      #size: 0-100
             return 1
 
-        elif 100 < partition_size <= 1000:    #size: 20-200
-            return 5
-
-        elif 1000 < partition_size <= 10000:      #size:100-1000
+        elif 100 < partition_size <= 1000:    #size: 10-100
             return 10
 
-        elif 10000 < partition_size <= 50000:      #size:500-2500
-            return 20
+        elif 1000 < partition_size <= 10000:      #size:40-400
+            return 25
 
-        elif 50000 < partition_size <= 100000:    #size:1000-2000
+        elif 10000 < partition_size <= 50000:      #size:200-1000
             return 50
+
+        elif 50000 < partition_size <= 100000:    #size:500-1000
+            return 100
 
         else:
-            return 50
+            return 100
 
     def get_num_segments(self,vector_size):
         if vector_size <= 30:

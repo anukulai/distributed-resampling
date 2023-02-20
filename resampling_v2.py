@@ -144,9 +144,9 @@ def run_folds(dataset_name, label_col, random_state, iteration):
 
         # Save the dataframes so that you can perform No Sampling Experiments
         print("Saving the CSV files")
-        X_train.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train_ivfpq_a1/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
-        X_test.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test_ivfpq_a1/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
-        phi.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test_ivfpq_a1/{dataset_name}_phi_iter_{iteration}_fold_{fold}.csv", index=False)
+        X_train.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train_ivfpq_a2/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
+        X_test.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test_ivfpq_a2/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
+        phi.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test_ivfpq_a2/{dataset_name}_phi_iter_{iteration}_fold_{fold}.csv", index=False)
 
         # run sampling techniques #######################################
 
