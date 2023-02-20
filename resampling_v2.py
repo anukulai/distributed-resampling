@@ -144,32 +144,11 @@ def run_folds(dataset_name, label_col, random_state, iteration):
 
         # Save the dataframes so that you can perform No Sampling Experiments
         print("Saving the CSV files")
-        X_train.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
-        X_test.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
-        phi.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test/{dataset_name}_phi_iter_{iteration}_fold_{fold}.csv", index=False)
+        X_train.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train_ivfpq_a1/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
+        X_test.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test_ivfpq_a1/{dataset_name}_iter_{iteration}_fold_{fold}.csv", index=False)
+        phi.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test_ivfpq_a1/{dataset_name}_phi_iter_{iteration}_fold_{fold}.csv", index=False)
 
         # run sampling techniques #######################################
-
-        # try:
-        #     dist_rus_data, dist_rus_time = run_dist_rus(label_col, train)
-        #     dist_rus_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_rus_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["RUS"] = dist_rus_time
-        # except Exception as e:
-        #     print(f"Exception in RUS: {e}")
-        #
-        # try:
-        #     dist_ros_data, dist_ros_time = run_dist_ros(label_col, train)
-        #     dist_ros_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_ros_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ROS"] = dist_ros_time
-        # except Exception as e:
-        #     print(f"Exception in ROS: {e}")
-
-        # try:
-        #     smogn_data, smogn_time = run_smogn(label_col, train)
-        #     smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
-        # except Exception as e:
-        #     print(f"Exception in SMOGN: {e}")
 
         try:
             dist_smogn_2_data, dist_smogn_2_time = run_smogn_with_n_partitions(2, label_col, train)
