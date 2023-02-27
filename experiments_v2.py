@@ -19,9 +19,9 @@ LOGGER.setLevel(level=20)
 
 DATA_DIR = "new_data"   # change the data directory
 DATA_RAW_DIR = f"{DATA_DIR}/raw"
-DATA_PROCESSED_DIR = f"{DATA_DIR}/processed"
+DATA_PROCESSED_DIR = f"{DATA_DIR}/processed_faiss_kmeans"
 
-RESULT_DIR = "new_results_v2"
+RESULT_DIR = "results_faiss_kmeans"
 RESULT_EXECUTION_TIME_DIR = f"{RESULT_DIR}"
 RESULT_PREDICTIVE_PERFORMANCE_DIR = f"{RESULT_DIR}/predictive_performance"
 
@@ -75,6 +75,10 @@ EXPERIMENTS = {
     "dist_smogn_8": {
         "name": "Distributed SMOGN (k_partitions = 8)",
         "file_postfix": "_distsmogn8"
+    },
+    "dist_smogn_16": {
+        "name": "Distributed SMOGN (k_partitions = 16)",
+        "file_postfix": "_distsmogn16"
     }
 }
 
