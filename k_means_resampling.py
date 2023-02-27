@@ -8,7 +8,8 @@ from sklearn.model_selection import KFold
 from smogn import smoter
 
 from src.relevance.phi import Phi
-from src.sampling.mixed_sampling.dist_smogn_faiss import DistributedSMOGN_faiss
+from src.sampling.mixed_sampling.dist_smogn_mini_kmeans import DistributedSMOGN_MiniKMeans
+# from src.sampling.mixed_sampling.dist_smogn_faiss import DistributedSMOGN_faiss
 from src.sampling.over_sampling.distributed_ros import DistributedROS
 from src.sampling.under_sampling.distributed_rus import DistributedRUS
 
@@ -16,9 +17,9 @@ warnings.filterwarnings(action="ignore")
 
 DATA_DIR = "new_data"
 DATA_RAW_DIR = f"{DATA_DIR}/raw"
-DATA_PROCESSED_DIR = f"{DATA_DIR}/processed_faiss_kmeans"
+DATA_PROCESSED_DIR = f"{DATA_DIR}/processed_mini_kmeans"
 
-RESULT_DIR = "results_faiss_kmeans"
+RESULT_DIR = "results_mini_kmeans"
 RESULT_EXECUTION_TIME_DIR = f"{RESULT_DIR}"
 RESULT_PREDICTIVE_PERFORMANCE_DIR = f"{RESULT_DIR}/predictive_performance"
 
@@ -97,7 +98,7 @@ def run_smogn_with_n_partitions(n, label_col, train):
     print(f"Running SMOGN with {n} partitions")
     try:
         start_time = time.time()
-        train_dist_smogn_n = DistributedSMOGN_faiss(label_col=label_col, k_partitions=n).transform(train)
+        train_dist_smogn_n = DistributedSMOGN_MiniKMeans(label_col=label_col, k_partitions=n).transform(train)
         end_time = time.time()
         time_taken = round(end_time - start_time, 3)
 
