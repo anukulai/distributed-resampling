@@ -48,33 +48,37 @@ DATASETS = {
 }
 
 EXPERIMENTS = {
-    "base": {
-        "name": "No Sampling",
-        "file_postfix": ""
-    },
-    "rus": {
-        "name": "RUS",
-        "file_postfix": "_rus"
-    },
-    "ros": {
-        "name": "ROS",
-        "file_postfix": "_ros"
-    },
+    # "base": {
+    #     "name": "No Sampling",
+    #     "file_postfix": ""
+    # },
+    # "rus": {
+    #     "name": "RUS",
+    #     "file_postfix": "_rus"
+    # },
+    # "ros": {
+    #     "name": "ROS",
+    #     "file_postfix": "_ros"
+    # },
     # "smogn": {
     #     "name": "SMOGN",
     #     "file_postfix": "_smogn"
     # },
-    "dist_smogn_2": {
-        "name": "Distributed SMOGN (k_partitions = 2)",
-        "file_postfix": "_distsmogn2"
-    },
-    "dist_smogn_4": {
-        "name": "Distributed SMOGN (k_partitions = 4)",
-        "file_postfix": "_distsmogn4"
-    },
-    "dist_smogn_8": {
-        "name": "Distributed SMOGN (k_partitions = 8)",
-        "file_postfix": "_distsmogn8"
+    # "dist_smogn_2": {
+    #     "name": "Distributed SMOGN (k_partitions = 2)",
+    #     "file_postfix": "_distsmogn2"
+    # },
+    # "dist_smogn_4": {
+    #     "name": "Distributed SMOGN (k_partitions = 4)",
+    #     "file_postfix": "_distsmogn4"
+    # },
+    # "dist_smogn_8": {
+    #     "name": "Distributed SMOGN (k_partitions = 8)",
+    #     "file_postfix": "_distsmogn8"
+    # }
+    "dist_smogn_16": {
+        "name": "Distributed SMOGN (k_partitions = 16)",
+        "file_postfix": "_distsmogn16"
     }
 }
 
@@ -125,7 +129,8 @@ columns_to_remove = {
     "onion_prices": ["Unnamed: 0", "commodity", "arrival_date"],
     'CountyHousing': ["Unnamed: 0", "Real_Estate_Id", "Total_Sale_Date", "Month_Year_of_Sale", "Physical_Zip"],
     'gpu_performance': ["Run1(ms)", "Run2(ms)", "Run3(ms)"],
-    'HousePrices': ["Unnamed: 0"]
+    'HousePrices': ["Unnamed: 0"],
+    'Abalone': []
 }
 
 def run_folds(dataset_name, label_col, iteration, regressor_name):
