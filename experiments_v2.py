@@ -26,7 +26,7 @@ RESULT_EXECUTION_TIME_DIR = f"{RESULT_DIR}"
 RESULT_PREDICTIVE_PERFORMANCE_DIR = f"{RESULT_DIR}/predictive_performance"
 
 RANDOM_STATES = [42, 99, 65, 100, 1, 7, 23, 67, 11, 97]
-NUM_ITERATIONS = 1
+NUM_ITERATIONS = 10
 NUM_FOLDS = 5
 
 DATASETS = {
@@ -130,7 +130,15 @@ columns_to_remove = {
     'CountyHousing': ["Unnamed: 0", "Real_Estate_Id", "Total_Sale_Date", "Month_Year_of_Sale", "Physical_Zip"],
     'gpu_performance': ["Run1(ms)", "Run2(ms)", "Run3(ms)"],
     'HousePrices': ["Unnamed: 0"],
-    'Abalone': []
+    'Abalone': [],
+    'boston': [],
+    'bank8FM': [],
+    'heat': [],
+    'cpuSm': [],
+    'energy': [],
+    'superconductivity': [],
+    'creditScoring': [],
+    'salary_compensation': []
 }
 
 def run_folds(dataset_name, label_col, iteration):
