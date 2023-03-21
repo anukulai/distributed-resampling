@@ -149,8 +149,8 @@ def run_folds(dataset_name, label_col, iteration):
 
         for regressor, regressor_config in REGRESSORS.items():
             results = {}
-            # if regressor != regressor_name:
-            #     continue
+            if regressor != regressor_name:
+                continue
 
             for experiment, experiment_config in EXPERIMENTS.items():
                 LOGGER.info(f"Iteration: {iteration} | Fold: {fold} | Regressor: {regressor} | Exp: {experiment}")
@@ -217,10 +217,10 @@ def orchestrate_resampling(dataset_name):
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--dataset", type=str, required=True)
-    # arg_parser.add_argument("--regressor", type=str, required=True)
+    arg_parser.add_argument("--regressor", type=str, required=True)
 
     arguments = arg_parser.parse_args()
     dataset_name = arguments.dataset
-    # regressor_name = arguments.regressor
+    regressor_name = arguments.regressor
 
     orchestrate_resampling(dataset_name)
