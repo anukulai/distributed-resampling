@@ -40,30 +40,28 @@ DATASETS = {
     "creditScoring": "NumberOfDependents",
     "census": "Unemployment",
     "onion_prices": "modal_price",
-    "delays": "perdelay",
     "gpu_performance": "Run4(ms)",
     "CountyHousing": "Total_Sale_Price",
-    "HousePrices": "Prices",
-    "salary_compensation": "TotalCompensation",
+    "HousePrices": "Prices"
 }
 
 EXPERIMENTS = {
-    # "base": {
-    #     "name": "No Sampling",
-    #     "file_postfix": ""
-    # },
-    # "rus": {
-    #     "name": "RUS",
-    #     "file_postfix": "_rus"
-    # },
-    # "ros": {
-    #     "name": "ROS",
-    #     "file_postfix": "_ros"
-    # },
-    # "smogn": {
-    #     "name": "SMOGN",
-    #     "file_postfix": "_smogn"
-    # },
+    "base": {
+        "name": "No Sampling",
+        "file_postfix": ""
+    },
+    "rus": {
+        "name": "RUS",
+        "file_postfix": "_rus"
+    },
+    "ros": {
+        "name": "ROS",
+        "file_postfix": "_ros"
+    },
+    "smogn": {
+        "name": "SMOGN",
+        "file_postfix": "_smogn"
+    },
     "dist_smogn_2": {
         "name": "Distributed SMOGN (k_partitions = 2)",
         "file_postfix": "_distsmogn2"
@@ -137,8 +135,7 @@ columns_to_remove = {
     'cpuSm': [],
     'energy': [],
     'superconductivity': [],
-    'creditScoring': [],
-    'salary_compensation': []
+    'creditScoring': []
 }
 
 def run_folds(dataset_name, label_col, iteration):

@@ -158,8 +158,7 @@ class DistributedSMOGN_faiss(BaseMixedSampler, _KMeansParams, _SMOGNParams):
     def _create_synth_samples(self, partition, cat_feature_cols, num_feature_cols, label_col, n_synth_samples, k,
                               perturbation):
         n_rows = len(partition.index)
-        if(n_rows>1):
-            k = min(k, n_rows)
+        k = min(k, n_rows)
 
         # Calculate feature vectors
         feature_vectors = partition[[*num_feature_cols]].to_numpy()

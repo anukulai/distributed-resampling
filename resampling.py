@@ -33,11 +33,9 @@ DATASET_TO_LABEL_MAP = {
     "creditScoring": "NumberOfDependents",
     "census": "Unemployment",
     "onion_prices": "modal_price",
-    "delays": "perdelay",
     "gpu_performance": "Run4(ms)",
     "CountyHousing": "Total_Sale_Price",
-    "HousePrices": "Prices",
-    "salary_compensation": "TotalCompensation",
+    "HousePrices": "Prices"
 }
 
 RANDOM_STATES = [42, 99, 65, 100, 1, 7, 23, 67, 11, 97]
@@ -191,6 +189,13 @@ def run_folds(dataset_name, label_col, random_state, iteration):
             EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_8P"] = dist_smogn_8_time
         except Exception as e:
             print(f"Exception in DIST SMOGN8: {e}")
+
+        try:
+            dist_smogn_16_data, dist_smogn_16_time = run_smogn_with_n_partitions(16, label_col, train)
+            dist_smogn_16_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_distsmogn16_iter_{iteration}_fold_{fold}.csv", index=False)
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["Dist_SMOGN_16P"] = dist_smogn_16_time
+        except Exception as e:
+            print(f"Exception in DIST SMOGN16: {e}")
 
 
 def run_iterations(dataset_name):

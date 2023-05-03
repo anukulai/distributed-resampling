@@ -6,10 +6,8 @@ import pandas as pd
 from pyspark.sql import SparkSession
 from sklearn.model_selection import KFold
 
-# from src.sampling.mixed_sampling.dist_adasyn import adasyn
 from src.sampling.mixed_sampling.dist_adasyn import adasyn
 from src.relevance.phi import Phi
-from src.sampling.mixed_sampling.distributed_smogn_v2 import DistributedSMOGN_v2
 
 warnings.filterwarnings(action="ignore")
 
@@ -32,11 +30,9 @@ DATASET_TO_LABEL_MAP = {
     "creditScoring": "NumberOfDependents",
     "census": "Unemployment",
     "onion_prices": "modal_price",
-    "delays": "perdelay",
     "gpu_performance": "Run4(ms)",
     "CountyHousing": "Total_Sale_Price",
-    "HousePrices": "Prices",
-    "salary_compensation": "TotalCompensation",
+    "HousePrices": "Prices"
 }
 
 RANDOM_STATES = [42, 99, 65, 100, 1, 7, 23, 67, 11, 97]
@@ -50,7 +46,7 @@ SPARK.sparkContext.setLogLevel("ERROR")
 
 
 def run_adasyn(label_col, train, n):
-    print(f"Running Vanilla AdaSYN with {n} partitions")
+    print(f"Running ADASYNR with {n} partitions")
     try:
         start_time = time.time()
         train = train.toPandas()
@@ -61,21 +57,7 @@ def run_adasyn(label_col, train, n):
         return over_sampled_df, time_taken
 
     except Exception as e:
-        print(f"Found exception in AdaSYN with {n} partitions: {e}")
-
-
-# def run_smogn_with_n_partitions(n, label_col, train):
-#     print(f"Running SMOGN with {n} partitions")
-#     try:
-#         start_time = time.time()
-#         train_dist_smogn_n = DistributedSMOGN_v2(label_col=label_col, k_partitions=n).transform(train)
-#         end_time = time.time()
-#         time_taken = round(end_time - start_time, 3)
-#
-#         return train_dist_smogn_n.toPandas(), time_taken
-#
-#     except Exception as e:
-#         print(f"Found exception in DistSMOGN-{n}P: {e}")
+        print(f"Found exception in ADASYNR with {n} partitions: {e}")
 
 
 def run_folds(dataset_name, label_col, random_state, iteration):
@@ -123,30 +105,30 @@ def run_folds(dataset_name, label_col, random_state, iteration):
         try:
             adasyn_data, adasyn_time = run_adasyn(label_col, train, 2)
             adasyn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_adasyn2_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["AdaSYN_2P"] = adasyn_time
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ADASYN_2P"] = adasyn_time
         except Exception as e:
-            print(f"Exception in AdaSYN_2P: {e}")
+            print(f"Exception in ADASYN_2P: {e}")
 
         try:
             adasyn_data, adasyn_time = run_adasyn(label_col, train, 4)
             adasyn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_adasyn4_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["AdaSYN_4P"] = adasyn_time
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ADASYN_4P"] = adasyn_time
         except Exception as e:
-            print(f"Exception in AdaSYN_4P: {e}")
+            print(f"Exception in ADASYN_4P: {e}")
 
         try:
             adasyn_data, adasyn_time = run_adasyn(label_col, train, 8)
             adasyn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_adasyn8_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["AdaSYN_8P"] = adasyn_time
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ADASYN_8P"] = adasyn_time
         except Exception as e:
-            print(f"Exception in AdaSYN_8P: {e}")
+            print(f"Exception in ADASYN_8P: {e}")
 
         try:
             adasyn_data, adasyn_time = run_adasyn(label_col, train, 16)
             adasyn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_adasyn16_iter_{iteration}_fold_{fold}.csv", index=False)
-            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["AdaSYN_16P"] = adasyn_time
+            EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ADASYN_16P"] = adasyn_time
         except Exception as e:
-            print(f"Exception in AdaSYN_16P: {e}")
+            print(f"Exception in ADASYN_16P: {e}")
 
 
 def run_iterations(dataset_name):

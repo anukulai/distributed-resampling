@@ -9,8 +9,6 @@ from smogn import smoter
 
 from src.relevance.phi import Phi
 from src.sampling.mixed_sampling.dist_smogn_mini_kmeans_LSH import DistributedSMOGN_MiniKMeans_LSH
-from src.sampling.over_sampling.distributed_ros import DistributedROS
-from src.sampling.under_sampling.distributed_rus import DistributedRUS
 
 warnings.filterwarnings(action="ignore")
 
@@ -33,65 +31,19 @@ DATASET_TO_LABEL_MAP = {
     "creditScoring": "NumberOfDependents",
     "census": "Unemployment",
     "onion_prices": "modal_price",
-    "delays": "perdelay",
     "gpu_performance": "Run4(ms)",
     "CountyHousing": "Total_Sale_Price",
-    "HousePrices": "Prices",
-    "salary_compensation": "TotalCompensation",
+    "HousePrices": "Prices"
 }
 
 RANDOM_STATES = [42, 99, 65, 100, 1, 7, 23, 67, 11, 97]
-NUM_ITERATIONS = 1
+NUM_ITERATIONS = 10
 NUM_FOLDS = 5
 
 EXECUTION_TIME = {}
 
 SPARK = SparkSession.builder.master('local[4]').appName('Distributed Resampling').getOrCreate()
 SPARK.sparkContext.setLogLevel("ERROR")
-
-def run_dist_rus(label_col, train):
-    try:
-        print("Initializing Distributed RUS")
-        start_time = time.time()
-        train_rus = DistributedRUS(label_col=label_col, k_partitions=1).transform(train)
-        end_time = time.time()
-
-        time_taken = round(end_time-start_time, 3)
-
-        return train_rus.toPandas(), time_taken
-    except Exception as e:
-        print(f"Exception found in Distributed RUS: {e}")
-
-
-def run_dist_ros(label_col, train):
-    try:
-        print("Initializing Distributed ROS")
-        start_time = time.time()
-        train_ros = DistributedROS(label_col=label_col, k_partitions=1).transform(train)
-        end_time = time.time()
-
-        time_taken = round(end_time - start_time, 3)
-
-        return train_ros.toPandas(), time_taken
-
-    except Exception as e:
-        print(f"Exception found in Distributed ROS: {e}")
-
-
-def run_smogn(label_col, train):
-    try:
-        print("Initializing SMOGN")
-        start_time = time.time()
-        train_smogn = smoter(data=train.toPandas(), y=label_col)
-        end_time = time.time()
-
-        time_taken = round(end_time - start_time, 3)
-
-        return train_smogn, time_taken
-
-    except Exception as e:
-        print(f"Exception found in SMOGN: {e}")
-
 
 def run_smogn_with_n_partitions(n, label_col, train):
     print(f"Running SMOGN with {n} partitions")
@@ -149,27 +101,6 @@ def run_folds(dataset_name, label_col, random_state, iteration):
         phi.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/test/{dataset_name}_phi_iter_{iteration}_fold_{fold}.csv", index=False)
 
         # run sampling techniques #######################################
-        #
-        # try:
-        #     dist_rus_data, dist_rus_time = run_dist_rus(label_col, train)
-        #     dist_rus_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_rus_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["RUS"] = dist_rus_time
-        # except Exception as e:
-        #     print(f"Exception in RUS: {e}")
-        #
-        # try:
-        #     dist_ros_data, dist_ros_time = run_dist_ros(label_col, train)
-        #     dist_ros_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_ros_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["ROS"] = dist_ros_time
-        # except Exception as e:
-        #     print(f"Exception in ROS: {e}")
-        #
-        # try:
-        #     smogn_data, smogn_time = run_smogn(label_col, train)
-        #     smogn_data.to_csv(f"{DATA_PROCESSED_DIR}/{dataset_name}/train/{dataset_name}_smogn_iter_{iteration}_fold_{fold}.csv", index=False)
-        #     EXECUTION_TIME[f"iter_{iteration}_fold_{fold}"]["SMOGN"] = smogn_time
-        # except Exception as e:
-        #     print(f"Exception in SMOGN: {e}")
 
         try:
             dist_smogn_2_data, dist_smogn_2_time = run_smogn_with_n_partitions(2, label_col, train)
